@@ -9,3 +9,13 @@
 - The rover receives commands in the form of characters "f"orward, "b"ackward, "l", "r".
 - Planets are spheres, model that by wrapping from one edge of the grid to another.
 - If the rover crashes into the rover of another player, the other player's rover is destroyed.
+
+---
+## Design
+- Before adding the web layer, the hierarchy is
+  - The application supervisor (the entry point)
+  - The rover supervisor (the dynamic supervisor that will be used to create and destroy rover processes when a use enters or leaves)
+  - The rover processes
+  - Example:
+![Running before web layer](./docs/pic1.png#center)
+![Mars Rover Processes before the web layer](./docs/pic2.png#center)

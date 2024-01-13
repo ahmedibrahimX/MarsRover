@@ -7,6 +7,26 @@ defmodule MarsRover.Web.Router do
 
   get "/ping", do: send_resp(conn, 200, Poison.encode!(%{message: "pong"}))
 
+  post "/rover" do
+    rover_name = conn.body_params["name"]
+    x = conn.body_params["x"]
+    y = conn.body_params["y"]
+    direction = String.to_atom(conn.body_params["d"])
+
+    case RoverSupervisor.create_rover(rover_name, x, y, direction) do
+      {:ok, _} -> send_resp(conn, 201, Poison.encode!(%{message: "created rover #{rover_name}"}))
+      {:error, {:already_started, _}} -> send_resp(conn, 400, Poison.encode!(%{message: "rover already exists"}))
+      _ -> send_resp(conn, 500, "generic error")
+    end
+  end
+
+  post "/command" do
+    rover_name = conn.body_params["name"]
+    command = String.to_atom(conn.body_params["command"])
+    Controller.send_command(rover_name, command)
+    send_resp(conn, 204, Poison.encode!(%{}))
+  end
+
   match(_) do
     send_resp(conn, 404, "")
   end
